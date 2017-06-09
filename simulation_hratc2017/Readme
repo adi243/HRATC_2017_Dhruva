@@ -1,0 +1,24 @@
+Instructions to Compile and Run Mine Detection Code
+
+Dependencies
+
+
+1. move-base package - sudo apt-get install ros-indigo-move-base
+2. teb-local-planner package - sudo apt-get install ros-indigo-teb-local-planner
+
+
+Instructions
+
+1. Compile the given src (catkin_make)
+
+2. Make the following python scripts executables( Run command sudo chmod +x * )
+
+Location: src/my_code/scripts
+
+goals.py, mine_obstacles.py, mine_transform.py
+
+
+3. Run the following command to launch the code( Simulator launch is also added to the launch file)
+
+roslaunch hratc2017_framework bring_up.launch 
+

@@ -1,0 +1,13 @@
+<launch>
+
+
+
+
+  <include file="$(find my_code)/launch/move_base.launch"/>
+
+
+  <include file="$(find my_code)/launch/mine_detection.launch"/>
+
+
+
+</launch>

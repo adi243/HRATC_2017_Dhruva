@@ -1,0 +1,89 @@
+#!/usr/bin/env python  
+import roslib
+import rospy
+import math
+import tf
+import time
+import numpy as np
+import geometry_msgs.msg
+from metal_detector_msgs.msg._Coil import Coil
+from std_msgs.msg import Float32
+from std_msgs.msg import String
+from std_msgs.msg import Bool
+from geometry_msgs.msg import Twist, Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
+
+# importing all library 
+
+############################################################################################################################
+mean_coil_value=0.0 #initializing mean_coil_value globally
+threshold=0#initializing threshold value for metal detactor 
+mineposition=PoseStamped() #assigned PoseStamped message to mineposition variable 
+
+
+def coil_data(data):#call back function to subscribe data from /Coils topic
+	global leftCoil #left coil data variable
+	global rightCoil #right coil data variable
+	global mean_coil_value #average coil variable
+
+	leftCoil=data.left_coil #assigning left coil value
+	rightCoil=data.right_coil #assigning right coil value
+	if (leftCoil==1):
+
+		left_coil_value=1
+
+		tranform_calculator(left_coil_value)#calling tranform calculator and send the mean_coil_value
+
+def tranform_calculator(threshold):
+
+	try:
+		if (threshold==1.0):# threshold value for mine is 1.0
+			now = rospy.Time.now()#getting current ros time
+			time.sleep(0.1)
+			listener.waitForTransform("/minefield", "/right_coil", now, rospy.Duration(0.05))# waiting for tranform
+
+			trans1,rot1 = listener.lookupTransform('/minefield', '/right_coil', now)#calculate tf of right coil with respect to mine field and assigning values to trans and rot variable
+#########################################################################################################################
+			x1=trans1[0]    #
+			y1=trans1[1]    #
+			z1=trans1[2]    #
+                            #     Seperating each x,y,z, yaw ,pitch,roll 
+			yaw1=rot1[0]    #
+			pitch1=rot1[1]  #
+			roll1=rot1[2]   #
+#########################################################################################################################
+			trans2,rot2 = listener.lookupTransform('/minefield', '/left_coil', now)
+
+			x2=trans2[0]
+			y2=trans2[1]
+			z2=trans2[2]
+                                    #Doing same for calculating tf of lef coil with respect to minefield
+			yaw2=rot2[0]
+			pitch2=rot2[1]
+			roll2=rot2[2]
+
+			x=((x1+x2)/2)   #
+			y=((y1+y2)/2)   # calculating mean value from both left and right coil tf
+			z=((z1+z2)/2)   #
+###########################################################################################################################
+			mineposition.pose.position.x=x    #
+			mineposition.pose.position.y=y    #  Assigning x,y,z values to mineposition 
+			mineposition.pose.position.z=z    #
+##################################################################################################################
+			
+			dtd_mine  = rospy.Publisher('/HRATC_FW/set_mine', PoseStamped) #created set mine publisher to dtd_mine
+			dtd_mine.publish(mineposition) #publishing mineposition to dtd_mine publisher
+
+			print x,y,z
+		
+		else:
+			print "no mine"
+	except:pass
+	
+
+if __name__ == '__main__':
+
+	rospy.init_node('mine_tf')#initializing node
+	listener = tf.TransformListener()#initializing tf after node(very important)
+	rospy.Subscriber("/coils",Coil,coil_data)#subscribing /coils topic
+	rospy.loginfo('Started mine detecting and tf calculating node')
+	rospy.spin()#Spin and wait
