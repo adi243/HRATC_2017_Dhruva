@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+import math
+import time
+import numpy as np
+import rospy
+from std_msgs.msg import Float32
+from std_msgs.msg import String
+from std_msgs.msg import Bool
+from geometry_msgs.msg import Twist, Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
+
+a=0
+b=0
+
+
+def callback(data):
+	obstacle=PoseStamped()
+	global a
+	global b
+	dtd_obstacle  = rospy.Publisher('/HRATC_FW/set_mine', PoseStamped, queue_size=1)
+	m=data.pose.position.x
+	n=data.pose.position.y
+	c=m-a
+	d=n-b
+	if(abs(c)>=0.1 and abs(d)>=0.1):
+		obstacle.pose.position.x=m
+		obstacle.pose.position.y=n
+		obstacle.pose.position.z=0
+		dtd_obstacle.publish(obstacle)
+		a=data.pose.position.x
+		b=data.pose.position.y
+	
+
+
+
+def sub():
+
+	rospy.Subscriber("/dynamic_obstacles",PoseStamped,callback)
+	
+	rospy.spin()
+
+
+	
+
+if __name__ == '__main__':
+	rospy.init_node('unique_mine')#initializing node
+	sub()

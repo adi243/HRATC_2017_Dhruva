@@ -1,0 +1,393 @@
+#!/usr/bin/env python
+
+
+import roslib; roslib.load_manifest('visualization_marker_tutorials')
+import rospy
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+import actionlib
+from actionlib_msgs.msg import *
+from visualization_msgs.msg import Marker
+from visualization_msgs.msg import MarkerArray
+cornerx1=0
+cornerx2=0
+cornery1=0
+cornery2=0
+
+class newgoals():
+    def __init__(self):
+	rospy.init_node('nav_commands')
+	global cornerx1
+	global cornerx2
+	global cornery1
+	global cornery2
+        self.listener()
+	rospy.sleep(2)
+	i=cornerx2-cornerx1
+	j=cornery2-cornery1
+	m=(i/2)-0.5
+
+	n=(j/2)-0.5
+	
+	
+	rospy.on_shutdown(self.shutdown) # Dealing with Failure
+	self.move_base = actionlib.SimpleActionClient("move_base", MoveBaseAction)
+	rospy.loginfo("Waiting for the action server to come up")
+
+	self.move_base.wait_for_server(rospy.Duration(6))
+	goal = MoveBaseGoal()
+	goal.target_pose.header.frame_id = 'minefield'
+	goal.target_pose.header.stamp = rospy.Time.now()
+
+# Add code to allow grid to be decided based on given minefield corners
+
+	a=0.5	
+	b=0.5			
+				
+
+
+	while (a<=(m+1)):
+
+				goal.target_pose.pose.position.x = a
+				goal.target_pose.pose.position.y = 0
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = -0.707106
+				goal.target_pose.pose.orientation.w = 0.707106 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+
+		###################################################################################################
+				goal.target_pose.pose.position.x = a
+				goal.target_pose.pose.position.y = -b
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = -0.707106
+				goal.target_pose.pose.orientation.w = 0.707106 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+		###################################################################################################		
+
+				goal.target_pose.pose.position.x = a
+				goal.target_pose.pose.position.y = -b
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.1
+				goal.target_pose.pose.orientation.w = 0 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(15)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+		###################################################################################################
+				goal.target_pose.pose.position.x = 0
+				goal.target_pose.pose.position.y = -b
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.1
+				goal.target_pose.pose.orientation.w = 0 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+		###################################################################################################
+				goal.target_pose.pose.position.x = -a
+				goal.target_pose.pose.position.y = -b
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.1
+				goal.target_pose.pose.orientation.w = 0 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+		###################################################################################################
+				goal.target_pose.pose.position.x = -a
+				goal.target_pose.pose.position.y = -b
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.707106
+				goal.target_pose.pose.orientation.w = 0.707106 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(15)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+		###################################################################################################
+				goal.target_pose.pose.position.x = -a
+				goal.target_pose.pose.position.y = 0
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.707106
+				goal.target_pose.pose.orientation.w = 0.707106 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+
+		###################################################################################################
+				goal.target_pose.pose.position.x = -a
+				goal.target_pose.pose.position.y = b
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.707106
+				goal.target_pose.pose.orientation.w = 0.707106 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+		###################################################################################################
+				goal.target_pose.pose.position.x = -a
+				goal.target_pose.pose.position.y = (b+1.0)
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.707106
+				goal.target_pose.pose.orientation.w = 0.707106 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    				rospy.loginfo("Goal Reached")
+		###################################################################################################
+
+				goal.target_pose.pose.position.x = -a
+				goal.target_pose.pose.position.y = (b+1.0)
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.0
+				goal.target_pose.pose.orientation.w = 1.0 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(15)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    		
+
+						rospy.loginfo("Goal Reached")
+		###################################################################################################
+
+
+				goal.target_pose.pose.position.x = 0
+				goal.target_pose.pose.position.y = (b+1.0)
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.0
+				goal.target_pose.pose.orientation.w = 1.0 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+						rospy.loginfo("Goal Reached")
+		###################################################################################################
+
+				goal.target_pose.pose.position.x = (a+1.0)
+				goal.target_pose.pose.position.y = (b+1.0)
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = 0.0
+				goal.target_pose.pose.orientation.w = 1.0 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(30)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    		
+
+						rospy.loginfo("Goal Reached")
+				
+		    		
+		###################################################################################################
+				goal.target_pose.pose.position.x = (a+1.0)
+				goal.target_pose.pose.position.y = (b+1.0)
+				goal.target_pose.pose.position.z = 0.0
+				goal.target_pose.pose.orientation.z = -0.707106
+				goal.target_pose.pose.orientation.w = 0.707106 
+
+	
+				self.move_base.send_goal(goal)
+
+
+				success = self.move_base.wait_for_result(rospy.Duration(15)) 
+
+
+				if not success:
+		        		self.move_base.cancel_goal()
+		        		rospy.loginfo("The rover failed to reach the goal")
+	    			else:
+		
+					state = self.move_base.get_state()
+					if state == GoalStatus.SUCCEEDED:
+		    		
+
+						rospy.loginfo("Goal Reached")
+
+
+				a+=1.0				
+				b+=1.0
+		
+
+
+    def callback(self,corner):
+	global cornerx1
+	global cornerx2
+	global cornery1
+	global cornery2
+
+	corner1 = Marker()
+	corner2 = Marker()
+	corner3 = Marker()
+	corner1 = corner.markers[0]
+	corner2 = corner.markers[1]
+	corner3 = corner.markers[2]
+	cornerx1=corner1.pose.position.x
+	cornery1=corner1.pose.position.y
+	cornerx2=corner2.pose.position.x
+	cornery2=corner3.pose.position.y
+	
+
+    def listener(self):
+
+    	
+
+    	rospy.Subscriber("corners", MarkerArray, self.callback)
+
+    
+       
+    
+    def shutdown(self):
+        rospy.loginfo("Stop")
+
+
+if __name__ == '__main__':
+    try:
+        newgoals()
+    except rospy.ROSInterruptException:
+        rospy.loginfo("Unable to Call Class")
+

@@ -1,0 +1,11 @@
+
+<launch>
+
+  <node name="nav_commands" pkg="my_code" type="goals_test.py" output="screen"/>
+  <node name="publish_mine_obstacles" pkg="my_code" type="mine_obstacles.py" output="screen"/>
+  <node name="mine_detection" pkg="my_code" type="mine_transform.py" output="screen"/>
+
+
+
+
+</launch>

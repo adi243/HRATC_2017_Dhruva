@@ -1,0 +1,71 @@
+#!/usr/bin/env python
+
+import rospy
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+import actionlib
+from actionlib_msgs.msg import *
+import numpy as np
+import math
+import random
+import geometry_msgs.msg
+from std_msgs.msg import Float32
+from std_msgs.msg import String
+from std_msgs.msg import Bool
+from geometry_msgs.msg import Twist, Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
+
+## This script define the behaviour of the robot once a mine is detected. The robot stops and moves 0.4 m backward
+
+class mine_handle():
+
+	def __init__(self):
+		rospy.init_node('mine_handling')
+		self.listener()
+
+		
+	
+    	def handle_mine(self):
+
+		self.move_base = actionlib.SimpleActionClient("move_base", MoveBaseAction)
+		reverse_cmd  = rospy.Publisher('/p3at/cmd_vel', Twist, queue_size=4)
+		
+		self.move_base.wait_for_server(rospy.Duration(1))
+
+		rospy.loginfo("Cancelling Goal")
+
+		goal = MoveBaseGoal()
+
+		self.move_base.send_goal(goal)
+
+		#self.move_base.cancel_goal()
+
+		msg=Twist()
+	
+		## Commanding the rover to reverse
+		
+		msg.linear.x = -0.4
+		rospy.loginfo("Reversing")
+		reverse_cmd.publish(msg)
+		rospy.sleep(1)
+		rospy.loginfo("Stopping")
+		msg.linear.x=0
+		reverse_cmd.publish(msg)
+
+	def callback(self,data):
+
+		self.handle_mine()
+
+
+
+    	def listener(self):
+
+		rospy.Subscriber("/HRATC_FW/set_mine", PoseStamped, self.callback)
+	
+		rospy.spin()
+
+
+if __name__ == '__main__':
+    try:
+        mine_handle()
+    except rospy.ROSInterruptException:
+        rospy.loginfo("Unable to Call Class")
+
